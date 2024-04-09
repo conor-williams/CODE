@@ -1,0 +1,147 @@
+<!--0-... 2022 Janvier Montodg Desecterz 00-->
+<head>
+<title>Jumble Game</title>
+<link href="lightwalkerSmall.png" rel="shortcut icon" type="image/png">
+</head>
+<script>
+	let b129 = [];
+
+	function redraw() {
+        	document.body.innerHTML = '';
+		for (i = 0; i < 9; i++) { 
+			if (i==4) {
+				document.write("<div class=absolute style=`position:absolute;float:left;`" + "> <img id=q10r4 width=120 height=120 src=mor1-" + b129[i] + ".png> </img></div>");
+			} else {
+			  document.write("<div class=absolute style=`position:absolute;float:left;`" + "> <img width=120 height=120 id=q10r" + i + " src=mor1-" + b129[i] + ".png> </img></div>");
+			}
+			if ((i+1) % 3 == 0) {
+				document.write("<br><p><br><p><br><br>");
+			}
+		} 
+		document.write("<form action='#'>");
+		document.write("<b>Swap tile -- <font color=red>To:</font>:</b><input value=0 id=TO size=2 maxlength=2></input>");
+		document.write("<b><front color=red>From:</font></b><input value=7 id=FROM size=2 maxlength=3></input>");
+		document.write("<input type=button name=submit value=Swap onClick='playmove();' />");
+		document.write("</form>");
+		document.write("<div style=float:left><br><img width=80 height=90 src=dragon.png></div>");
+		document.write("<div style=float:left><h2>Jumble Game: jumble the image <br>and then put it back together</h2>");
+		document.write("<h3>0 is top left and 8 is bottom right</h3></div>");
+		checkWinner();
+	}
+
+	function checkWinner() {
+		sq = 0;
+		for (; sq < 9; sq++) {
+			if (b129[sq] != sq) {
+				break;
+			}
+		}
+		if (sq == 9) {
+			alert("well done....");
+			window.location.reload();
+		}
+	}
+
+	function jumb() {
+		for (i = 0; i < 9; i++) {
+			b129[i] = -1;
+		}
+
+		for (i = 0; i < 9; i++) {
+			found = 0;
+			jk = itx2();
+			if (b129[i] == -1) {
+				for (l=0; l<9;l++) {
+					if (b129[l] == jk) {
+						i--;
+						found = 1;
+					}
+						
+				}
+				if (l == 9 && found == 0) {b129[i] = jk;}
+			}
+		}
+		/*alert("cornflakes ,milk boys..."); */
+	redraw();
+/*		document.write("<img id=q10r11 src=cornflakes.png></img>     <img src=milk.png id=q10r9 ></img><img id=q10r10 src=bcdabc.png></img>"); */
+		
+	}
+
+	function playmove() {
+		F = document.getElementById("FROM").value; Fi = parseInt(F);
+		T = document.getElementById("TO").value; Ti = parseInt(T);
+		if (Fi > 8 || Ti > 8) {alert("(+)choose again mon amy xx...");} else if
+		/*(Fi == Ti) {alert("say nothing, they are the same... c");} else */
+		(Fi == Ti) {alert("they are the same... pick 2 different numbers \n between 0 and 8");} else {
+			TiTmp = b129[Ti];
+			b129[Ti] = b129[Fi];
+			b129[Fi] = TiTmp;
+			redraw();
+		} 
+	}
+
+	function itx2() {
+	     u = 9;
+  	     dI3 = new Date().toISOString(); let text = dI3.toString();
+	/*	text.replace(/[^0-9]/g, "") % u;*/
+	     return (text.replace(/[^0-9]/g, "") % u);
+        }
+
+K4=4;
+decr4=1;
+//re-loop order todo & soon...
+function blah15() {
+        showHide4 = document.getElementById("q10r" + K4);
+        if (decr4 == 0) {K4=++K4;}
+        else if ( decr4 == 1) {K4=--K4;}
+
+        if (K4 == 0 && decr4 == 0) {decr4=1;}
+        else if (K4 == 0 && decr4 == 1) {decr4=0;}
+        else if (K4 == 11 && decr4 == 0) {K4=0; decr4=0;}
+        else if (K4 == 11 && decr4 == 1) {K4=0; decr4=0;} 
+/*
+        if (K4 == 0 && decr4 == 0) {decr4=1;}
+        else if (K4 == 0 && decr4 == 1) {decr4=0;}
+        else if (K4 == 6 && decr4 == 0) {decr4=1;}
+        else if (K4 == 6 && decr4 == 1) {decr4=0;} */
+}
+
+/*
+setInterval(() => {
+        blah15();
+        showHide4.style.visibility = "visible";
+        setTimeout(() => {
+            showHide4.style.visibility = "hidden";
+        }, 1024); ; 
+}, 1204);
+*/
+
+</script>
+
+<div class=absolute id=blah12345 style=position:absolute>
+<script>
+	for (i = 0; i < 9; i++) {
+		document.write("<div class=absolute style=`position:absolute;float:left;`" + "> <img width=120 height=120 src=mor1-" + i + ".png>" +
+			"</img></div>");
+		if ((i+1) % 3 == 0) {
+			document.writeln("<p>");
+		}
+	}
+	document.writeln("<p>");
+	document.writeln("<h2>Jumble Game: jumble the image <br> and put it back together</h2>");
+			
+</script>
+
+</div>
+<div class=absolute style=position:absolute>
+<form action='#'>
+	<input type=button name=submit value=jumble onClick="jumb()" />
+</form>
+</div>
+<!--to u too &slah;b...-->
+<pre>
+<!----2. ./hello2 -->
+
+</pre>
+<p><br><p>n<font size=10 color=orange>o</font>te:<p>
+	
