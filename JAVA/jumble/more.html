@@ -1,0 +1,85 @@
+<script>
+	let b129 = [];
+
+	function redraw() {
+        	document.body.innerHTML = '';
+		for (i = 0; i < 9; i++) { 
+			document.write("<div class=absolute style=`position:absolute;float:left;`" + "> <img src=mor1-" + b129[i] + ".png> </img></div>");
+			if ((i+1) % 3 == 0) {
+				document.writeln("<br>");
+				document.writeln("<br>");
+				document.writeln("<br>");
+				document.writeln("<br>");
+				document.writeln("<br>");
+				document.writeln("<br>");
+				document.writeln("<br>");
+				document.writeln("<br>");
+			}
+		} 
+document.write("<form action='#'>");
+document.write("<b>From:</b><input value=3 id=FROM size=2 maxlength=3></input>");
+document.write("<b>  To:</b><input value=2 id=TO size=2 maxlength=3></input>");
+document.write("<input type=button name=submit value=Swap onClick='playmove();' />");
+document.write("</form>");
+	}
+
+	function jumb() {
+		for (i = 0; i < 9; i++) {
+			b129[i] = -1;
+		}
+
+		for (i = 0; i < 9; i++) {
+			found = 0;
+			jk = itx2();
+			if (b129[i] == -1) {
+				for (l=0; l<9;l++) {
+					if (b129[l] == jk) {
+						i--;
+						found = 1;
+					}
+						
+				}
+				if (l == 9 && found == 0) {b129[i] = jk;}
+			}
+		}
+		redraw();
+	}
+
+	function playmove() {
+		F = document.getElementById("FROM").value; Fi = parseInt(F);
+		T = document.getElementById("TO").value; Ti = parseInt(T);
+		TiTmp = b129[Ti];
+		b129[Ti] = b129[Fi];
+		b129[Fi] = TiTmp;
+		redraw();
+	}
+
+	function itx2() {
+	     u = 9;
+  	     dI3 = new Date; let text = dI3.toString();
+		text.replace(/[^0-9]/g, "") % u;
+	     return (text.replace(/[^0-9]/g, "") % u);
+        }
+</script>
+
+<div class=absolute id=blah12345 style=position:absolute>
+<script>
+	for (i = 0; i < 9; i++) {
+		document.write("<div class=absolute style=`position:absolute;float:left;`" + "> <img src=mor1-" + i + ".png>" +
+			"</img></div>");
+		if ((i+1) % 3 == 0) {
+			document.writeln("<p>");
+		}
+	}
+
+</script>
+
+</div>
+<div class=absolute style=position:absolute>
+
+<form action='#'>
+	<input type=button name=submit value=jumble onClick="jumb()" />
+</form>
+</div>
+<!--conor.williams@gmail.com my birthday pressie to me ... and of course
+to u too...-->

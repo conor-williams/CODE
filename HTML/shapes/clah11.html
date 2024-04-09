@@ -1,0 +1,412 @@
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<html>
+<head>
+<title>viewee__r</title>
+</head>
+
+<body>
+<!--<canvas width="500" height="420" style="border:10 solid #000000;" id=myCanvasX ></canvas>-->
+<canvas width="51" height="42" style="border:10 solid #000000;" id=myCanvas258 ></canvas>
+
+<form id=form1 name="form1" action="#">
+	<input type=text name="i_form_id_wS" id="i_form_id_wS" >1222 </input>
+	<input type=button name="submit" value=Submit onclick="writeShape();" />
+</form>
+
+
+<script>
+
+function writeShape() {
+	alert("writeShape" + document.getElementById("i_form_id_wS").value);
+	drawShape(document.getElementById("i_form_id_wS").value);
+
+}
+function convertCanvasToImage(canvas) {
+	var image = new Image();
+	//image.src = canvas.toDataURL("image/png");
+	
+	return image;
+}
+
+function writeDate(dateStr) {
+var d = new Date();
+document.write(dateStr);
+document.write(d.getUTCHours());
+document.write(".");
+document.write(d.getUTCMinutes() + 1);
+document.write(".");
+document.write(d.getUTCSeconds());
+}
+
+function drawShape(shapeNumber) { 
+writeDate("writeShapeLoaded");
+
+//for (var canv = 1; canv <= 1 && canv != 258; canv++) 
+//for (var canv = 1; canv <= 1 && canv != 258; canv++) 
+var canv = 258;
+writeDate("Started calc");
+document.write("<canvas width=500 height=420 style=\"border:10 solid #000000;\" id=myCanvas258 ></canvas>");
+
+  var c = document.getElementById("myCanvas" + canv);
+writeDate("Started calca"  + c );
+
+abcd = getSelection();
+alert(abcd);
+
+  var ctx = c.getContext("2d");
+ writeDate("after" );
+
+
+
+writeDate("after");
+
+  if (canv == 199) { canv = 258; }
+//alert ("myCanvas" + canv);
+
+    startsidedshape  = endsidedshape = canv + shapeNumber; 
+//17042; //11 -> 100 - 7 mins. 1 cpu..  
+	
+    ctx.font="20px Georgia";
+    for (m = shapeNumber; m <= shapeNumber ; m++) {
+//     for (m = startsidedshape; m <= endsidedshape ; m++) {
+
+shapeNum = m;
+betangle = 360/m;
+    ctx.fillText("Shape!" + m, 180,30);
+	mul = 100;
+        offsetx = 150;
+        offsety = 220;	
+
+writeDate("well");
+	// from centre, to pb cut points...	
+        for (j = 1; j <= m ; j++) {
+		afromcp = betangle * j *(Math.PI / 180);
+
+		xc = Math.round( ( Math.cos(afromcp) * mul ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul ) );   
+
+		ctx.moveTo( offsetx, offsety );
+		ctx.lineTo(offsetx + xc, offsety + yc);
+		    ctx.stroke();
+	}
+
+        // with sides, ic sbbbpb
+	mul2 = 75;
+	xp = 75;
+	yp = 0;
+	osetx = 320;
+	osety = 100;
+   	 for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+
+		ctx.moveTo( xp + osetx, yp + osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+		xp = xc;
+		yp = yc;
+		    ctx.stroke();
+	}
+
+  // with sides, ic sbbbpb
+	mul2 = 75;
+	xp = 50;
+	yp = 0;
+	osetx = 330;
+	osety = 300;
+   	 for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+
+		ctx.moveTo( xp + osetx, yp + osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+		
+		ctx.moveTo( osetx, osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+		xp = xc;
+		yp = yc;
+    ctx.stroke();
+		
+	}
+	// the plan... to draw tangents to the pb's...
+	mul2 = 80;
+	xp = 80;
+	yp = 0;
+	osetx = 90;
+	osety = 90;
+	pbl = mul2*Math.tan(betangle/2 * (Math.PI / 180));		
+	rcm = Math.sqrt(mul2 * mul2 + (pbl * pbl)); 
+	 for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+		
+		ctx.moveTo( osetx, osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+if (i / 2 == 1) {
+		a3 = (betangle * i + (betangle / 2 )) * (Math.PI / 180);
+		xv = Math.round(rcm * Math.cos(a3));
+		yv = Math.round(rcm * Math.sin(a3));
+
+		ctx.moveTo( xv + osetx, yv + osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+    ctx.stroke();
+}
+
+	if (i % 2) {
+		a4 = (betangle * i - (betangle / 2 )) * (Math.PI / 180);
+		xt = Math.round(rcm * Math.cos(a4));
+		yt = Math.round(rcm * Math.sin(a4));
+
+		ctx.moveTo( xt + osetx, yt + osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+
+ctx.moveTo( 230 + osetx, 200 + osety );
+ctx.lineTo(osetx + xc, osety + yc);
+		xp = xc;
+		yp = yc;
+		}
+    ctx.stroke();
+     	}
+	// the plan... to draw tangents to the pb's...
+	mul2 = xp = 45;
+	yp = 0;
+	osetx = 50;
+	osety = 320;
+	pbl = mul2*Math.tan(betangle/2 * (Math.PI / 180));		
+	rcm = Math.sqrt(mul2 * mul2 + (pbl * pbl)); 
+	for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+		
+		ctx.moveTo( osetx, osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+
+		if (1 == 1) {
+			a3 = (betangle * i + (betangle / 2 )) * (Math.PI / 180);
+			xv = Math.round(rcm * Math.cos(a3));
+			yv = Math.round(rcm * Math.sin(a3));
+
+			ctx.moveTo( xv + osetx, yv + osety );
+			ctx.lineTo(osetx + xc, osety + yc); 
+		}
+    ctx.stroke();
+		if (1 == 1) {
+			a4 = (betangle * i - (betangle / 2 )) * (Math.PI / 180);
+			xt = Math.round(rcm * Math.cos(a4));
+			yt = Math.round(rcm * Math.sin(a4));
+
+			ctx.moveTo( xt + osetx, yt + osety );
+			ctx.lineTo(osetx + xc, osety + yc);
+/*
+ctx.moveTo( 230 + osetx, 200 + osety );
+ctx.lineTo(osetx + xc, osety + yc);*/
+			xp = xc;
+			yp = yc;
+		}
+	}
+	// the plan... to draw tangents to the pb's...
+	mul2  = 45;
+	xp = mul2;
+	mul1 = mul2 + 5;
+	yp = 0;
+	osetx = 150;
+	osety = 325;
+	pbl = mul2*Math.tan(betangle/2 * (Math.PI / 180));		
+	rcm = Math.sqrt(mul2 * mul2 + (pbl * pbl)); 
+	//ctx.fillStyle = "rgba( 200, 200, 200)";
+	for (k = 1; k <= 10; k++) {
+    ctx.stroke();
+	for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+		
+		ctx.moveTo( osetx, osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+
+		if (1 == 1) {
+			a3 = (betangle * i + (betangle / 2 )) * (Math.PI / 180);
+			xv = Math.round(rcm * Math.cos(a3));
+			yv = Math.round(rcm * Math.sin(a3));
+			ctx.moveTo( xv + osetx, yv + osety );
+			ctx.lineTo(osetx + xc, osety + yc); 
+
+			a4 = (betangle * i - (betangle  / 2 )) * (Math.PI / 180);
+			xt = Math.round(rcm * Math.cos(a4));
+			yt = Math.round(rcm * Math.sin(a4));
+			ctx.moveTo( xt + osetx, yt + osety );
+			ctx.lineTo(osetx + xc, osety + yc);
+		}
+		/*ctx.clearCircle(osetx, osety, mul1);*/
+
+    ctx.stroke();
+
+	}}
+	//ctx.strokeStyle = '#ef0000'; //color
+	ctx.stroke();
+// the plan... to draw tangents to the pb's...
+	mul2  = 45;
+	xp = mul2;
+	mul1 = mul2 + 5;
+	yp = 0;
+	osetx = 150;
+	osety = 325;
+	pbl = mul2*Math.tan(betangle/2 * (Math.PI / 180));		
+	rcm = Math.sqrt(mul2 * mul2 + (pbl * pbl)); 
+	//ctx.fillStyle = "rgba( 200, 200, 200)";
+	for (k = 1; k <= 10; k++) {
+    ctx.stroke();
+	for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+		
+		ctx.moveTo( osetx, osety );
+		ctx.lineTo(osetx + xc, osety + yc);
+
+		if (1 == 1) {
+			a3 = (betangle * i + (betangle / 2 )) * (Math.PI / 180);
+			xv = Math.round(rcm * Math.cos(a3));
+			yv = Math.round(rcm * Math.sin(a3));
+			ctx.moveTo( xv + osetx, yv + osety );
+			ctx.lineTo(osetx + xc, osety + yc); 
+
+			a4 = (betangle * i - (betangle  / 2 )) * (Math.PI / 180);
+			xt = Math.round(rcm * Math.cos(a4));
+			yt = Math.round(rcm * Math.sin(a4));
+			ctx.moveTo( xt + osetx, yt + osety );
+			ctx.lineTo(osetx + xc, osety + yc);
+		}
+		/*ctx.clearCircle(osetx, osety, mul1);*/
+
+
+
+	}}
+
+	/*ctx.fillStyle = "rgba( 255, 255, 0)";*/
+	ctx.closePath();
+	//ctx.fillRect(50, 50, 450, 400 );
+	/*ctx.clearRect(440, 390, 50, 50 );*/
+
+	
+	/*ctx.clearRect(50, 50, 450, 400 );*/
+	//ctx.strokeStyle = '#ffffff';
+	ctx.stroke();
+
+	//ctx.strokeStyle = '#ef0000'; //color
+	ctx.stroke();
+// the plan... to draw tangents to the pb's...
+	mul2  = 45;
+	xp = mul2;
+	mul1 = mul2 + 5;
+	yp = 0;
+	osetx = 400;
+	osety = 200;
+	pbl = mul2*Math.tan(betangle/2 * (Math.PI / 180));		
+	rcm = Math.sqrt(mul2 * mul2 + (pbl * pbl)); 
+	//ctx.fillStyle = "rgba( 200, 200, 200)";
+	for (k = 1; k <= 10; k++) {
+    ctx.stroke();
+	for (i = 1; i <= m ; i++) {
+		afromcp = betangle * i * (Math.PI / 180);
+		
+		xc = Math.round( ( Math.cos(afromcp) * mul2 ) );
+		yc = Math.round( ( Math.sin(afromcp) * mul2 ) );   
+		
+		//ctx.moveTo( osetx, osety );
+		//ctx.lineTo(osetx + xc, osety + yc);
+
+		if (1 == 1) {
+			a3 = (betangle * i + (betangle / 2 )) * (Math.PI / 180);
+			xv = Math.round(rcm * Math.cos(a3));
+			yv = Math.round(rcm * Math.sin(a3));
+			ctx.moveTo( xv + osetx, yv + osety );
+			ctx.lineTo(osetx + xc, osety + yc); 
+
+			a4 = (betangle * i - (betangle  / 2 )) * (Math.PI / 180);
+			xt = Math.round(rcm * Math.cos(a4));
+			yt = Math.round(rcm * Math.sin(a4));
+			ctx.moveTo( xt + osetx, yt + osety );
+			ctx.lineTo(osetx + xc, osety + yc);
+		}
+		/*ctx.clearCircle(osetx, osety, mul1);*/
+
+
+
+	}}
+ctx.stroke();
+
+
+	
+	yp = 0;
+	osetx = 400;
+	osety = 410;
+ 
+
+ctx.stroke();
+    }
+    
+
+    ctx.font="11px Georgia";
+ ctx.moveTo(402, 330);
+ ctx.fillText(" Shape " +shapeNum, 402, 330);
+    ctx.lineTo(480, 330);
+ ctx.moveTo(402, 350);
+ ctx.fillText("#Sides " +shapeNum, 402, 350);
+    ctx.lineTo(480, 350);
+ ctx.moveTo(402, 370);
+ ctx.fillText("angle " + (360/shapeNum), 402, 370);
+    ctx.lineTo(480, 370);
+ctx.moveTo(402, 390);
+ ctx.fillText("half ang " + (360/shapeNum)* 0.5, 402, 390);
+    ctx.lineTo(480, 390);
+ ctx.moveTo(402, 410);
+ ctx.fillText("tan ang " + Math.tan(360 /shapeNum * (Math.PI / 180)), 402, 410);
+    ctx.lineTo(480, 410);
+
+	pbl = mul2*Math.tan(betangle/2 * (Math.PI / 180));		
+	rcm = Math.sqrt(mul2 * mul2 + (pbl * pbl));
+ 
+mulx = 1/Math.tan(betangle/2 * (Math.PI / 180));
+rcmx = Math.sqrt(mulx * mulx + (1 * 1));
+
+ ctx.moveTo(402, 430);
+ ctx.fillText("side len    2", 402, 430);
+    ctx.lineTo(480, 430);
+ ctx.moveTo(402, 450);
+ ctx.fillText("pbl    1", 402, 450);
+    ctx.lineTo(480, 450);
+ctx.moveTo(402, 470);
+ ctx.fillText("radius#1    "+ mulx, 402, 470);
+    ctx.lineTo(480, 470);
+ctx.moveTo(402, 490);
+ ctx.fillText("radius#2    "+ rcmx  , 402, 490);
+    ctx.lineTo(480, 490);
+ 
+   ctx.moveTo(450, 500);
+    ctx.lineTo(450, 300);
+
+    ctx.stroke();
+
+   //var c = document.getElementById("myCanvas" + canv);
+   //var image = convertCanvasToImage(c);
+//document.write("<image src=" + image.src + " alt=nq>");
+ 
+writeDate("Ended calc");
+//}   
+}
+</script>
+'end'..--|__.
+
+</body>
+</html>
