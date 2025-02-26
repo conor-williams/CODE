@@ -1,0 +1,16 @@
+file 1dog.png
+outpoint 3
+file 2dog.png
+outpoint 1
+file 3dog.png
+outpoint 2
+file 4dog.png
+outpoint 1
+file 5dog.png
+outpoint 3
+file 6dog.png
+outpoint 2
+file 7dog.png
+outpoint 1
+file 8dog.png
+outpoint 2
