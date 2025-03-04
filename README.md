@@ -4,7 +4,7 @@
 <pre>
 TOU: this strikethrough is being interpreted                 VVVVVVVVVVVVVVVVVVV
 	<s>o looking now to tidy part2's (11-24) of every year (16-01-2025) </s>
-	o dup2 needed an fflush -- now no debug -- sorry! broken strikethrough VVV
+	o broken strikethrough VVVV
 	conor.williams@DESKTOP-MM5HH8I <s>~AOC-main</s>
 $ cat lool.txt
         2015
