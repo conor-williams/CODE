@@ -1,10 +1,11 @@
 <h3>Notes: c.w.</h3>
-<br></br>
+<br>
 <h3>Update (11::18-01-25):</h3>
 <pre>
+TOU: this strikethrough is being interpreted                 VVVVVVVVVVVVVVVVVVV
 	<s>o looking now to tidy part2's (11-24) of every year (16-01-2025) </s>
 	o dup2 needed an fflush -- now no debug -- sorry!
-
+TOU: this strikethrough is _not_ being interpreted:VVVVV
 	conor.williams@DESKTOP-MM5HH8I <s>~AOC-main</s>
 $ cat lool.txt
         2015
