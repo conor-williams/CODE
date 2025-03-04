@@ -4,8 +4,10 @@
 <pre>
 TOU: this strikethrough is being interpreted                 VVVVVVVVVVVVVVVVVVV
 	<s>o looking now to tidy part2's (11-24) of every year (16-01-2025) </s>
-	o conor.williams@DESKTOP-MM5HH8I <s>~/AOC-main</s>
-	conor.williams@DESKTOP-MM5HH8I <s>~AOC-main</s>
+	o dup2 needed an fflush -- now no debug -- sorry!
+	o Result of Tidy every year <s>but</s> including 2024: (+if the file is not present, it has not been coded )
+	conor.williams@DESKTOP-MM5HH8I <s>~/AOC-main</s>
+
 $ cat lool.txt
         2015
 2015/day12/day12.2.c:   printf("broken\n"); exit(0);
