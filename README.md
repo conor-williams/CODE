@@ -22,3 +22,4 @@ $ cat lool.txt
 
 </pre>
 
+2 or 3 strikethroughs not begin interpreted
