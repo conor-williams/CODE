@@ -5,6 +5,8 @@
 <p>
 
 <br>
+<h2>asdf</h2>
+<br><br>
 <pre>
   asdf
   asdf
@@ -12,3 +14,7 @@
 </pre>
 
 this is after
+<p>
+  <br>
+  <pre>
+</p>
