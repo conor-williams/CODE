@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import java.io.*;
 import java.util.Vector;
 import java.util.Objects;
+import javax.sound.sampled.*;
 
 
 @SuppressWarnings("unchecked")
@@ -111,12 +112,12 @@ public class Battleship {
 			//System.out.println(shipPosY);
 			//System.out.println(shipPosX);
 			/*
-			System.out.println("start: " + start);
-			System.out.println("qq[0]: " + qq[0]);
-			System.out.println("qq[0]: " + qq[1]);
-			System.out.println("qq[0]: " + qq[2]);
-			System.out.println("playerGo: " + playerGo);
-			*/
+			   System.out.println("start: " + start);
+			   System.out.println("qq[0]: " + qq[0]);
+			   System.out.println("qq[0]: " + qq[1]);
+			   System.out.println("qq[0]: " + qq[2]);
+			   System.out.println("playerGo: " + playerGo);
+			   */
 
 			if (start && qq[0].equals("P") ) {
 				start = false;
@@ -136,22 +137,8 @@ public class Battleship {
 				userTries++;
 				if (gridComp[Integer.valueOf(qq[1])][Integer.parseInt(qq[2])] == -99) {
 					System.out.println("Player makes the hit and wins sinking computers battleship...");	
-					try {
-                                                frame.setVisible(false);
-                                                Thread.sleep(300);
-                                                frame.setVisible(true);
-                                                Thread.sleep(300);
-                                                frame.setVisible(false);
-                                                Thread.sleep(300);
-                                                frame.setVisible(true);
-                                                Thread.sleep(300);
-                                                frame.setVisible(false);
-                                                Thread.sleep(300);
-                                                frame.setVisible(true);
-                                                Thread.sleep(300);
-                                                frame.setVisible(false);
-                                        } catch (InterruptedException ex1) {
-                                        }
+					drama();
+
 
 					String ex = " tries.";
 					if (userTries == 1) {ex = " try.";}
@@ -169,7 +156,7 @@ public class Battleship {
 					if (already.contains(tup)) {System.out.println("already contains"); continue;}
 					already.add(tup);
 					System.out.println("guessComp: " + guessCompY + " " + guessCompX);
-				
+
 					playerGo = false;
 					buttonsPlayer[guessCompY][guessCompX].doClick();
 					buttonsPlayer[guessCompY][guessCompX].setBackground(Color.BLACK);
@@ -180,22 +167,7 @@ public class Battleship {
 			} else if (qq[0].equals("P") && playerGo == false) {
 				if (gridPlayer[Integer.valueOf(qq[1])][Integer.parseInt(qq[2])] == -101) {
 					System.out.println("Computer wins, he hit your green square, your ship...");	
-					try {
-                                                frame.setVisible(false);
-                                                Thread.sleep(300);
-                                                frame.setVisible(true);
-                                                Thread.sleep(300);
-                                                frame.setVisible(false);
-                                                Thread.sleep(300);
-                                                frame.setVisible(true);
-                                                Thread.sleep(300);
-                                                frame.setVisible(false);
-                                                Thread.sleep(300);
-                                                frame.setVisible(true);
-                                                Thread.sleep(300);
-                                                frame.setVisible(false);
-                                        } catch (InterruptedException ex1) {
-                                        }
+					drama();
 					String ex = " tries.";
 					if (userTries == 1) {ex = " try.";}
 					JOptionPane.showMessageDialog(null, "****Computer wins...\nIn " + userTries + ex);
@@ -205,45 +177,75 @@ public class Battleship {
 				playerGo = true;
 				//buttonsPlayer[guessCompY][guessCompX].setBackground(Color.BLACK);
 				/*
-				source.setBackground(Color.RED);
-				source.setEnabled(false);
-				int guessCompY = (int)(Math.random() * sizeY);
-				int guessCompX = (int)(Math.random() * sizeX);
-				System.out.println("guessComp: " + guessCompX + " " + guessCompY);
-				buttonsPlayer[guessCompY][guessCompX].doClick();
-				buttonsPlayer[guessCompY][guessCompX].setBackground(Color.BLACK);
-				*/
+				   source.setBackground(Color.RED);
+				   source.setEnabled(false);
+				   int guessCompY = (int)(Math.random() * sizeY);
+				   int guessCompX = (int)(Math.random() * sizeX);
+				   System.out.println("guessComp: " + guessCompX + " " + guessCompY);
+				   buttonsPlayer[guessCompY][guessCompX].doClick();
+				   buttonsPlayer[guessCompY][guessCompX].setBackground(Color.BLACK);
+				   */
 			}
 
 
 
 		}
 	}
+	public static void drama() {
+		try {
+			File wavBoom = new File("boom.wav");
+			AudioInputStream stream;
+			AudioFormat format;
+			DataLine.Info info;
+			Clip clip;
+
+			stream = AudioSystem.getAudioInputStream(wavBoom);
+			format = stream.getFormat();
+			info = new DataLine.Info(Clip.class, format);
+			clip = (Clip) AudioSystem.getLine(info);
+			clip.open(stream);
+			clip.start();
+			frame.setVisible(false);
+			Thread.sleep(300);
+			frame.setVisible(true);
+			Thread.sleep(300);
+			frame.setVisible(false);
+			Thread.sleep(300);
+			frame.setVisible(true);
+			Thread.sleep(300);
+			frame.setVisible(false);
+			Thread.sleep(300);
+			frame.setVisible(true);
+			Thread.sleep(300);
+			frame.setVisible(false);
+		} catch (Exception ex1) {
+		}
+	}
 }
 
 @SuppressWarnings("unchecked")
 class Tuple<X,Y> {
-        public X first;
-        public Y second;
+	public X first;
+	public Y second;
 
-        public Tuple(X first, Y second) {
-                this.first = first;
-                this.second = second;
-        }
-        @Override
-        public boolean equals(Object o) {
-                Tuple tu2 = (Tuple) o;
-                if (this == o) return true;
-                if (!(o instanceof Tuple)) return false;
-                if (!this.first.equals(tu2.first)) {return false;}
-                if (!this.second.equals(tu2.second)) {return false;}
+	public Tuple(X first, Y second) {
+		this.first = first;
+		this.second = second;
+	}
+	@Override
+	public boolean equals(Object o) {
+		Tuple tu2 = (Tuple) o;
+		if (this == o) return true;
+		if (!(o instanceof Tuple)) return false;
+		if (!this.first.equals(tu2.first)) {return false;}
+		if (!this.second.equals(tu2.second)) {return false;}
 
-                return true;
-        }
-        @Override
-        public int hashCode() {
-                return Objects.hash(first, second);
-        }
+		return true;
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(first, second);
+	}
 
 }
 
