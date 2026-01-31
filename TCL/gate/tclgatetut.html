@@ -1,0 +1,200 @@
+<PRE>
+11.1	Tcl Gateway Overview
+
+The Tcl gateway chain set of programs was written for Plan 9 and used as
+a specific analysis of the Plan 9 OS by running it on Plan 9 and on the
+other OS's on the network. The analysis shall be discussed further in
+the results chapter. The Tcl gateway chain consists of five parts:
+
+1.	willftsv.tcl	- The main server program
+
+2.	willgate.tcl	- The gateway part of the program.
+                Multiple instances of this gateway can be chained together
+
+3.	willfget.tcl	- A client to get files from the server
+
+4.	willfput.tcl	- A client to put files on the server
+
+5.	willksv.tcl	- A client to kill off the servers and gateways
+
+The graphic below gives a picture of how these programs link together.
+<IMG src=gateway.bmp><BR>
+ 
+Figure 18 - The Gateway Chain Process Model
+
+Each part of the chain has a bi-directional socket connection to the
+next part. All the programs can be run on the same box. This is useful
+for testing purposes. The usual way this was run was to run each part of
+the chain on a different box. In doing so the file being transferred would
+hop from process to process.
+
+11.2	willftsv.tcl
+
+This is the main server program. This accepts and distributes files to
+the requestor. When run this opens a socket to listen for requests:
+
+set servsocket [socket -server accept $hostport]
+
+The socket is then configured for the correct type of buffering. Line
+buffering will read a line once an end-of-line character is read.
+The variable buffersize holds the max size of the buffer. Blocking
+waits until the other side has finished talking to the socket.
+Setting translation to binary allows control characters and binary
+characters on the socket.
+
+	fconfigure $servsocket -buffering line -buffersize $buffersize -blocking 1 -translation binary
+
+The socket then listens for requests and carries out various
+functions based on what comes down the socket. The following is a
+list of some of the commands the server expects from the socket:
+
+1.	oksend		- sends the requested file down the socket
+
+2.	quitQuiTquit	- quits the program
+
+3.      globlist        - sends a list of files that match the wildcard
+                        list to the client
+
+4.	FilenameEG	- gets the filename from the socket
+
+5.      FilenamE        - writes the file to disk from the socket
+	
+11.3	willgate.tcl
+
+Willgate takes three command line parameters. The socket on which to
+listen and the socket and hostname of the server or of the next willgate.
+Willgate then open a socket to this host and listens for requests on its
+own socket. Willgate is quite simple and most of what it does it transmit
+commands down or up the line. Some commands that pass through it from the
+server are:
+
+1.	DoneEman		- when the file is
+                finished transferring this is expected on the line
+
+2.	fileexists	- this message is received if the file already exists
+
+3.	globlistfailed - this gets read if the file cannot be found
+
+4.	donefile		- this messages gets sent to it when the
+                file has been transmitted on the socket
+
+5.	FilenameE		- causes the server or client to
+                        write the file to disk
+
+6.	BlAhhAlB		- causes the client socket to be shutdown
+
+7.	Globlistsuccess	- this message is read if the file exists
+
+Some commands that pass through it from the client are:
+
+1.	DonEman 
+
+2.	donefile
+
+3.	filenamE
+
+4.	oksend
+
+5.	globlistsuccess
+
+6.	globlist
+
+11.4	willfget.tcl
+
+Willfget receives a file from the server. This can be straight from
+the server or can go through the gateway chain set of programs. Willfget
+takes three arguments on the command line, a port number and a hostname
+from which the file will be sent. It also takes a file list. Commands
+are sent down the socket with the command:
+
+puts $socket $command
+
+Some commands this sends to the server are:
+
+1.	FilenamEG - this precedes the actual filename
+
+2.	DonEman 	- this gets sent when the file is received
+
+3.	oksend 	- sent when ready to receive the files
+
+Commands are received from the socket with the command:
+
+set commandrecv [get $socket]
+
+Some commands willfget receives are:
+
+1.	doneman		- the socket is closed when this is received
+
+2.	fileerror		- received when there is a problem on
+                        the line
+
+3.	globlist		- precedes a list of the files that
+                are going to be transmit from the server
+
+4.	filenotexist	- received when the file does not exist on the server
+
+5.	filecloseproblem	- received from the server when
+                the file cannot be closed properly
+
+6.      0               - received when the last block is correctly received
+
+7.	invalidinit	- received when there has been an invalid
+                initiation sequence on the line
+
+11.5	willfput.tcl
+
+Willfput sends a file down the socket to the server. Three arguments
+are taken on the command line, a port number, a hostname and the name
+of the file to send. A socket is opened and configured to the hostname
+and port given. Commands are sent down the socket with the command:
+
+puts $socket $command
+
+	Some of these commands are:
+
+1.	FilenamE - precedes the name of the file to be sent
+
+2.	Various Numbers - these contain the size of the
+                block being sent, and the speed of transfer
+
+Commands are received from the socket with the command:
+
+set commandrecv [get $socket]
+
+Some commands that are received from the socket are:
+
+1.	doneman		- flags end of transmission
+
+2.	donefile		- sets the done variable
+
+3.	fileerrror	- received if there has been a problem on the line
+
+4.	fileexists	- received if the file already exists on the server
+
+5.	filecloseproblem	- received if the file could not be
+                                closed properly
+
+6.	FilenamE 		- precedes the name of the file to be sent
+
+7.	sendinitstring	- received when the incorrect init sequence has
+                        been sent
+
+11.6	willksv.tcl
+
+Willksv simply open a socket to the server given on the command line and
+sends the string quitQuiTquit to the server. The server receives this
+string and exits gracefully.
+
+11.7	Improvements
+
+The gateway chain set of programs runs very successfully and high speeds
+of transfer have been recorded. At the moment each client hogs the
+server on connection to it. In future versions a fork could occur and leave
+the server free for other requests on the line. This is the main problem
+with the gateway chain as it successfully sends both text and binary
+file between the different OS's on the network
+
+The gateway chain set of programs could be modified to transfer any type of
+packet, not just files. In this way http proxies and telnet gateways
+could be built.
+
