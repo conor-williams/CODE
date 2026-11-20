@@ -1,0 +1,159 @@
+
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+const string BASE_URL = "https://atu-team-yavca7kp.atlassian.net";
+//const string PROJECT = "CA2 - Software Processes - SpaceCW";
+const string PROJECT = "CA2SPACECW";
+// Read credentials from environment variables.
+string email = Environment.GetEnvironmentVariable("JIRA_EMAIL")
+?? throw new Exception("JIRA_EMAIL not set.");
+string token = Environment.GetEnvironmentVariable("JIRA_API_TOKEN")
+?? throw new Exception("JIRA_API_TOKEN not set.");
+using HttpClient client = new();
+string credentials = Convert.ToBase64String(
+		Encoding.UTF8.GetBytes($"{email}:{token}"));
+client.DefaultRequestHeaders.Authorization =
+new AuthenticationHeaderValue("Basic", credentials);
+client.DefaultRequestHeaders.Accept.Add(
+		new MediaTypeWithQualityHeaderValue("application/json"));
+var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+// Movement counters.
+//int todo = 0; int inProgress = 0; int testing = 0; int done = 0;
+HashSet<string> todoIssues = new();
+HashSet<string> inProgressIssues = new();
+HashSet<string> testingIssues = new();
+HashSet<string> doneIssues = new();
+
+// 1. Retrieve all issues in the project.
+Console.WriteLine("Retrieving Jira issues...");
+List<string> issueKeys = new();
+string? nextPageToken = null;
+do
+{
+	var requestBody = new {
+		jql = $"project = \"{PROJECT}\"",
+		    fields = new[] { "key" },
+		    maxResults = 100,
+		    nextPageToken
+	};
+	string json = await PostJson(client, $"{BASE_URL}/rest/api/3/search/jql", requestBody);
+	var result = JsonSerializer.Deserialize<SearchResult>(json, options)!;
+	issueKeys.AddRange(result.Issues.Select(i => i.Key));
+	nextPageToken = result.IsLast ? null : result.NextPageToken;
+} while (nextPageToken != null);
+
+Console.WriteLine($"Found {issueKeys.Count} issues.");
+// 2. Retrieve the changelog for every issue.
+List<(string, string)> dates = new();
+dates.Add(("2026-11-08 00:00", "2026-11-10 23:59"));
+dates.Add(("2026-11-11 00:00", "2026-11-13 23:59"));
+dates.Add(("2026-11-14 00:00", "2026-11-16 23:59"));
+Console.WriteLine($"\x1B[33m\x1B[1m            Reporting Period         |ToDo|InProg|Testing|Done\x1B[0m");
+Console.WriteLine($"\x1B[33m--------------------------------------------------------------\x1B[0m");
+foreach ((string from, string to) in dates) {
+	DateTimeOffset dFrom = DateTimeOffset.Parse(from);
+	DateTimeOffset dTo = DateTimeOffset.Parse(to);
+	foreach (string issueKey in issueKeys)
+	{
+		int startAt = 0;
+		while (true)
+		{
+			string url = $"{BASE_URL}/rest/api/3/issue/{issueKey}/changelog" +
+				$"?startAt={startAt}&maxResults=100";
+			string json = await GetJson(client, url);
+			var result = JsonSerializer.Deserialize<ChangelogResult>( json, options)!;
+			foreach (var history in result.Values)
+			{
+				if (!DateTimeOffset.TryParse( history.Created, out DateTimeOffset changedAt)) continue;
+				// Only count changes within the reporting period.
+				if (changedAt < dFrom || changedAt > dTo) continue;
+				foreach (var item in history.Items)
+				{
+					if (!item.Field.Equals(
+						"status", StringComparison.OrdinalIgnoreCase))
+						continue;
+
+					string newStatus = item.ToStringValue ?? "";
+					switch (newStatus.ToLowerInvariant())
+					{
+						case "to do":
+							todoIssues.Add(issueKey);
+							break;
+						case "in progress":
+							inProgressIssues.Add(issueKey);
+							break;
+						case "testing":
+							testingIssues.Add(issueKey);
+							break;
+						case "done":
+							doneIssues.Add(issueKey);
+							break;
+					}
+				}
+			}
+			if (result.IsLast || result.Values.Count == 0) break;
+			startAt += result.Values.Count;
+		}
+	}
+	int todo = todoIssues.Count;
+	int inProgress = inProgressIssues.Count;
+	int testing = testingIssues.Count;
+	int done = doneIssues.Count;
+	Console.WriteLine($"\x1B[34m{from} - {to}  \x1B[33m|\x1B[34m{todo}   \x1B[33m|\x1B[34m{inProgress}     \x1B[33m|\x1B[34m{testing}      \x1B[33m|\x1B[34m{done}\x1B[0m");
+	todoIssues.Clear();
+	inProgressIssues.Clear();
+	testingIssues.Clear();
+	doneIssues.Clear();
+}
+// HTTP helper methods.
+static async Task<string> GetJson(HttpClient client, string url) {
+	using var response = await client.GetAsync(url);
+	string content = await response.Content.ReadAsStringAsync();
+	if (!response.IsSuccessStatusCode)
+		throw new Exception( $"HTTP {(int)response.StatusCode}: {content}");
+	return content;
+}
+
+static async Task<string> PostJson( HttpClient client, string url, object data) {
+	string json = JsonSerializer.Serialize(data);
+	using var response = await client.PostAsync( url, new StringContent(json, Encoding.UTF8, "application/json"));
+	string content = await response.Content.ReadAsStringAsync();
+	if (!response.IsSuccessStatusCode)
+		throw new Exception( $"HTTP {(int)response.StatusCode}: {content}");
+	return content;
+}
+// JSON classes.
+class SearchResult {
+	[JsonPropertyName("issues")]
+		public List<JiraIssue> Issues { get; set; } = [];
+	[JsonPropertyName("nextPageToken")]
+		public string? NextPageToken { get; set; }
+	[JsonPropertyName("isLast")]
+		public bool IsLast { get; set; }
+}
+class JiraIssue {
+	[JsonPropertyName("key")] public string Key { get; set; } = "";
+}
+class ChangelogResult {
+	[JsonPropertyName("values")]
+		public List<History> Values { get; set; } = [];
+	[JsonPropertyName("isLast")]
+		public bool IsLast { get; set; }
+}
+class History {
+	[JsonPropertyName("created")]
+		public string Created { get; set; } = "";
+	[JsonPropertyName("items")]
+		public List<HistoryItem> Items { get; set; } = [];
+}
+class HistoryItem {
+	[JsonPropertyName("field")]
+		public string Field { get; set; } = "";
+	[JsonPropertyName("toString")]
+		public string? ToStringValue { get; set; }
+	[JsonPropertyName("fromString")]
+		public string? FromString { get; set; }
+}
